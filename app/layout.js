@@ -1,5 +1,8 @@
-import { Inter } from 'next/font/google'
+import { Inter } from 'next/font/google';
+import { Providers } from './providers';
+import Navbar from './components/Navbar';
 import './globals.css'
+import { FirebaseProvider } from './context/firebase';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -10,8 +13,22 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+
+    <>
+
+      <html lang="en" />
+      <head>
+        <style>{`.${inter.className} { font-family: ${inter.fontFamily}; }`}</style>
+      </head>
+      <body>
+        <FirebaseProvider>
+          <Providers>
+            <Navbar />
+            {children}
+          </Providers>
+        </FirebaseProvider>
+      </body>
+    </>
+
   )
 }
