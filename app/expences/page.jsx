@@ -1,21 +1,20 @@
 'use client';
-import {
-	Button,
-	Container,
-	FormControl,
-	FormLabel,
-	Input,
-	Select,
-} from '@chakra-ui/react';
+import { Container } from '@chakra-ui/react';
 import { useContext, useState } from 'react';
 import { FirebaseContext } from '../context/firebase';
+import Expensespart1 from '../components/Expensespart1';
+import Expensespart2 from '../components/Expensespart2';
 
 const ExpencesPage = () => {
 	const firebase = useContext(FirebaseContext);
+
+	const [currentpage, setCurrentpage] = useState(1);
+
 	const [data, setData] = useState({
 		ebill: '',
 		wbill: '',
 		tax: '',
+		emi: '',
 		salary: '',
 		maintance: '',
 		laundry: '',
@@ -35,16 +34,15 @@ const ExpencesPage = () => {
 		e.preventDefault();
 		try {
 			const expense = await firebase.addExpences(
-				ebill,
-				wbill,
-				tax,
-				emi,
-				salary,
-
-				maintance,
-				laundry,
-				miscellaneous,
-				remark
+				data.ebill,
+				data.wbill,
+				data.tax,
+				data.emi,
+				data.salary,
+				data.maintance,
+				data.laundry,
+				data.miscellaneous,
+				data.remark
 			);
 			return expense;
 		} catch (error) {
@@ -52,58 +50,31 @@ const ExpencesPage = () => {
 		}
 	};
 
+	const onNext = () => {
+		setCurrentpage(currentpage + 1);
+	};
+
+	const onPrevious = () => {
+		setCurrentpage(currentpage - 1);
+	};
+
 	return (
 		<Container>
 			<form onSubmit={addExpense}>
-				<FormControl>
-					<FormLabel>Electricity Bill</FormLabel>
-					<Input type="number" onChange={onInputChange} value={data.ebill} />
-				</FormControl>
-				<FormControl>
-					<FormLabel>Water Bill</FormLabel>
-					<Input type="number" onChange={onInputChange} value={data.wbill} />
-				</FormControl>
-				<FormControl>
-					<FormLabel>Municipal Tax</FormLabel>
-					<Input type="number" onChange={onInputChange} value={data.tax} />
-				</FormControl>
-				<FormControl>
-					<FormLabel>Bank EMI</FormLabel>
-					<Input type="number" onChange={onInputChange} value={data.emi} />
-				</FormControl>
-				<FormControl>
-					<FormLabel>Salary</FormLabel>
-					<Input type="number" onChange={onInputChange} value={data.salary} />
-				</FormControl>
-				<FormControl>
-					<FormLabel>Address</FormLabel>
-				</FormControl>
-				<FormControl>
-					<FormLabel>Maintnance</FormLabel>
-					<Input
-						type="number"
-						onChange={onInputChange}
-						value={data.maintance}
+				{currentpage === 1 ? (
+					<Expensespart1
+						data={data}
+						onInputChange={onInputChange}
+						onNext={onNext}
 					/>
-				</FormControl>
-				<FormControl>
-					<FormLabel>Laundry</FormLabel>
-					<Input type="number" onChange={onInputChange} value={data.laundry} />
-				</FormControl>
-				<FormControl>
-					<FormLabel>Miscellaneous</FormLabel>
-					<Input
-						type="number"
-						onChange={onInputChange}
-						value={data.miscellaneous}
+				) : (
+					<Expensespart2
+						data={data}
+						onInputChange={onInputChange}
+						onPrevious={onPrevious}
+						onSubmit={addExpense}
 					/>
-				</FormControl>
-				<FormControl>
-					<FormLabel>Remark</FormLabel>
-					<Input type="text" onChange={onInputChange} value={data.remark} />
-				</FormControl>
-
-				<Button type="submit">Submit</Button>
+				)}
 			</form>
 		</Container>
 	);

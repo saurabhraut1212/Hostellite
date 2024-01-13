@@ -8,13 +8,13 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, on
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyARS6nvraK_8hDOYrixmQtj7yTNrlNsRjs",
-    authDomain: "hostel-management-73d3b.firebaseapp.com",
-    projectId: "hostel-management-73d3b",
-    storageBucket: "hostel-management-73d3b.appspot.com",
-    messagingSenderId: "1012395704965",
-    appId: "1:1012395704965:web:1a07e98cfc049282b5dfec",
-    databaseURL: "https://hostel-management-73d3b-default-rtdb.firebaseio.com/"
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTHDOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECTID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGEBUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGINGSENDERID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APIID,
+    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASEURL
 };
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);

@@ -11,6 +11,8 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { FirebaseContext } from '../../context/firebase';
 import { useRouter } from 'next/navigation';
+import Rentdetailspart1 from '../../components/RentDetailspart1';
+import Rentdetailspart2 from '../../components/Rentdetailspart2';
 
 const RentDetails = ({ params }) => {
 	const router = useRouter();
@@ -23,6 +25,8 @@ const RentDetails = ({ params }) => {
 	const [startdate, setStartDate] = useState('');
 	const [duedate, setDuedate] = useState('');
 	const [sid, setSId] = useState('');
+
+	const [currentPage, setCurrentPage] = useState(1);
 
 	const [data, setData] = useState({
 		advancedeposit: '',
@@ -84,93 +88,34 @@ const RentDetails = ({ params }) => {
 			throw new Error('Error in adding rent details');
 		}
 	};
+
+	const onNext = () => {
+		setCurrentPage(currentPage + 1);
+	};
+
+	const onPrevious = () => {
+		setCurrentPage(currentPage - 1);
+	};
 	return (
 		<Container>
-			<form onSubmit={handleSubmit}>
-				<FormControl isRequired>
-					<FormLabel>Name</FormLabel>
-					<Input type="text" name="name" value={name} />
-				</FormControl>
-				<FormControl isRequired>
-					<FormLabel>ID</FormLabel>
-					<Input type="text" name="id" value={sid} />
-				</FormControl>
-				<FormControl isRequired>
-					<FormLabel>Bed</FormLabel>
-					<Input type="text" name="bed" value={bed} />
-				</FormControl>
-
-				<FormControl isRequired>
-					<FormLabel>Advance Deposit</FormLabel>
-					<Input
-						type="number"
-						placeholder="Deposit"
-						name="advancedeposit"
-						onChange={onInputChange}
-						value={data.advancedeposit}
+			<form>
+				{currentPage === 1 ? (
+					<Rentdetailspart1
+						name={name}
+						bed={bed}
+						sid={sid}
+						startdate={startdate}
+						duedate={duedate}
+						onNext={onNext}
 					/>
-				</FormControl>
-				<FormControl isRequired>
-					<FormLabel>Start Date</FormLabel>
-					<Input
-						type="date"
-						name="startdate"
-						placeholder="Start date"
-						value={startdate}
+				) : (
+					<Rentdetailspart2
+						data={data}
+						onInputChange={onInputChange}
+						onPrevious={onPrevious}
+						onSubmit={handleSubmit}
 					/>
-				</FormControl>
-				<FormControl isRequired>
-					<FormLabel>Due Date</FormLabel>
-					<Input
-						type="date"
-						name="duedate"
-						placeholder="Due date"
-						value={duedate}
-					/>
-				</FormControl>
-
-				<FormControl isRequired>
-					<FormLabel>Monthly rent to charge</FormLabel>
-					<Input
-						type="number"
-						name="mrate"
-						placeholder="Monthly rent"
-						onChange={onInputChange}
-						value={data.mrate}
-					/>
-				</FormControl>
-				<FormControl isRequired>
-					<FormLabel>Miscellaneous</FormLabel>
-					<Input
-						type="number"
-						name="miscellaneous"
-						placeholder="Miscellaneous"
-						onChange={onInputChange}
-						value={data.miscellaneous}
-					/>
-				</FormControl>
-				<FormControl isRequired>
-					<FormLabel>Remark</FormLabel>
-					<Input
-						type="text"
-						name="remark"
-						placeholder="Add Remark"
-						onChange={onInputChange}
-						value={data.remark}
-					/>
-				</FormControl>
-				<FormControl isRequired>
-					<FormLabel>Booking Paid Amount</FormLabel>
-					<Input
-						type="number"
-						name="bookingAmount"
-						placeholder="Booking Amount"
-						onChange={onInputChange}
-						value={data.bookingAmount}
-					/>
-				</FormControl>
-
-				<Button type="submit">Submit</Button>
+				)}
 			</form>
 		</Container>
 	);
